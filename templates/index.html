@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>音乐推荐系统 - 选择喜欢的歌曲</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: #333;
+        }
+        .container {
+            max-width: none;
+            width: 100%;
+            margin: 0;
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 32px 6vw 24px;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 32px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        p:first-of-type {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .subtitle {
+            margin-top: 24px;
+            margin-bottom: 0;
+            color: #555;
+            font-size: 12px;
+            text-align: center;
+        }
+        .principle {
+            font-size: 14px;
+            color: #666;
+            background: #f5f7fb;
+            border-left: 4px solid #4e79ff;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+        }
+        .error {
+            color: #d93025;
+            margin-bottom: 16px;
+        }
+        .field-label {
+            font-weight: normal;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+        select {
+            width: 100%;
+            min-height: 360px;
+            border-radius: 8px;
+            border: 1px solid #d0d7de;
+            padding: 12px;
+            font-size: 16px;
+            flex: 1;
+        }
+        button {
+            margin-top: 24px;
+            padding: 12px 28px;
+            border-radius: 999px;
+            border: none;
+            background: #4e79ff;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        form {
+            max-width: none;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        button:hover {
+            background: #3b63d6;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px 32px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            select {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>音乐推荐系统</h1>
+    <p>请选择一首或多首你喜欢的歌曲，然后点击“生成推荐”。</p>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('recommend_route') }}">
+        <label for="favorite_titles" class="field-label">按住 Ctrl 或 Shift 可以多选：</label><br>
+        <select id="favorite_titles" name="favorite_titles" multiple>
+            {% for song in songs %}
+                <option value="{{ song.title }}">{{ song.title }} - {{ song.artist }} ({{ song.genre }})</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">生成推荐</button>
+    </form>
+    <p class="subtitle">基于爬虫 + AI 轻量化模型的音乐推荐系统</p>
+</div>
+</body>
+</html>
