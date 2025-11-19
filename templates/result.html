@@ -42,6 +42,33 @@
             font-size: 16px;
             line-height: 1.6;
         }
+        .selected-block {
+            margin-bottom: 16px;
+        }
+        .selected-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .selected-title {
+            font-weight: 600;
+        }
+        .selected-toggle {
+            font-size: 14px;
+            color: #4e79ff;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .selected-list {
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .selected-list.collapsed {
+            display: none;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -85,12 +112,21 @@
 <div class="container">
     <h1>推荐结果</h1>
 
-    <p>你选择的歌曲：</p>
-    <ul>
-        {% for title in favorites %}
-            <li>{{ title }}</li>
-        {% endfor %}
-    </ul>
+    <div class="selected-block">
+        <div class="selected-header">
+            <span class="selected-title">你选择的歌曲（共 {{ favorites|length }} 首）：</span>
+            {% if favorites %}
+                <button type="button" class="selected-toggle" id="toggleSelected">展开选择的歌曲</button>
+            {% endif %}
+        </div>
+        {% if favorites %}
+            <ul id="selectedList" class="selected-list collapsed">
+                {% for title in favorites %}
+                    <li>{{ title }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 
     <h2>为你推荐的相似歌曲：</h2>
     {% if recommendations %}
@@ -120,5 +156,18 @@
 
     <p class="footer-action"><a href="{{ url_for('index') }}" class="back-link">返回重新选择</a></p>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toggle = document.getElementById('toggleSelected');
+        var list = document.getElementById('selectedList');
+        if (!toggle || !list) {
+            return;
+        }
+        toggle.addEventListener('click', function () {
+            var collapsed = list.classList.toggle('collapsed');
+            toggle.textContent = collapsed ? '展开选择的歌曲' : '收起选择的歌曲';
+        });
+    });
+</script>
 </body>
 </html>

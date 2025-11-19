@@ -64,6 +64,16 @@
             margin-bottom: 4px;
             display: inline-block;
         }
+        .field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4px;
+        }
+        .song-count {
+            font-size: 14px;
+            color: #888;
+        }
         select {
             width: 100%;
             min-height: 360px;
@@ -116,7 +126,10 @@
     {% endif %}
 
     <form method="post" action="{{ url_for('recommend_route') }}">
-        <label for="favorite_titles" class="field-label">按住 Ctrl 或 Shift 可以多选：</label><br>
+        <div class="field-header">
+            <label for="favorite_titles" class="field-label">按住 Ctrl 或 Shift 可以多选：</label>
+            <span class="song-count">共 {{ songs|length }} 首歌曲</span>
+        </div>
         <select id="favorite_titles" name="favorite_titles" multiple>
             {% for song in songs %}
                 <option value="{{ song.title }}">{{ song.title }} - {{ song.artist }} ({{ song.genre }})</option>
