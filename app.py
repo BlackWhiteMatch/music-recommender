@@ -24,10 +24,15 @@ def recommend_route():
     except ValueError as exc:
         return redirect(url_for("index", error=str(exc)))
 
+    # 根据所选歌名获取完整的歌曲信息（包含歌名、歌手、风格）
+    songs_df = recommender.get_all_songs()
+    favorites_df = songs_df[songs_df["title"].isin(selected_titles)]
+
+    favorites = favorites_df.to_dict(orient="records")
     recommendations = recommendations_df.to_dict(orient="records")
     return render_template(
         "result.html",
-        favorites=selected_titles,
+        favorites=favorites,
         recommendations=recommendations,
     )
 
