@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    songs_df = recommender.get_all_songs()
+    songs_df = recommender.get_display_songs(max_per_genre=4)
     songs = songs_df.to_dict(orient="records")
     error = request.args.get("error")
     return render_template("index.html", songs=songs, error=error)

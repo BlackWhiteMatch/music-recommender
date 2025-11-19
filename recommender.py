@@ -62,6 +62,19 @@ def get_all_songs():
     return df[["id", "title", "artist", "genre"]].copy()
 
 
+def get_display_songs(max_per_genre: int = 30):
+    df, _, _ = load_data_and_model()
+    if max_per_genre is None or max_per_genre <= 0:
+        return df[["id", "title", "artist", "genre"]].copy()
+
+    sampled = (
+        df.groupby("genre", group_keys=False)
+        .apply(lambda g: g.sample(n=min(len(g), max_per_genre), random_state=42))
+        .reset_index(drop=True)
+    )
+    return sampled[["id", "title", "artist", "genre"]].copy()
+
+
 def _find_indices_by_titles(titles):
     """根据歌曲标题列表，找到对应的行索引。"""
     df, _, _ = load_data_and_model()
