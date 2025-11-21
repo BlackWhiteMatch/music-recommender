@@ -9,10 +9,10 @@ app = Flask(__name__) #创建一个Flask应用对象
 def index():
     songs_df = recommender.get_display_songs(max_per_genre=4) #每种风格选取最多4首歌曲展示
     songs = songs_df.to_dict(orient="records")
-    error = request.args.get("error") #查询参数
-    return render_template("index.html", songs=songs, error=error) #向模板传数据
+    error = request.args.get("error") 
+    return render_template("index.html", songs=songs, error=error) #渲染模板
 
-#推荐路由：接收表单 + 生成推荐
+#推荐路由：接收表单+生成推荐
 @app.route("/recommend", methods=["POST"])
 def recommend_route():
     selected_titles = request.form.getlist("favorite_titles") #获取表单列表
@@ -24,16 +24,16 @@ def recommend_route():
     except ValueError as exc:
         return redirect(url_for("index", error=str(exc)))
 
-    # 根据所选歌名获取完整的歌曲信息（包含歌名、歌手、风格）
+    #根据所选歌名获取完整的歌曲信息（包含歌名、歌手、风格）
     songs_df = recommender.get_all_songs()
     favorites_df = songs_df[songs_df["title"].isin(selected_titles)]
 
-    favorites = favorites_df.to_dict(orient="records")             #用户首页选取的歌曲
+    favorites = favorites_df.to_dict(orient="records")             #展示用户首页选取的歌曲
     recommendations = recommendations_df.to_dict(orient="records") #根据推荐所得到的歌曲
     return render_template(
         "result.html",
-        favorites=favorites,             #选中的歌的信息列表
-        recommendations=recommendations, #推荐结果的信息列表
+        favorites=favorites,             
+        recommendations=recommendations, 
     )
 
 
