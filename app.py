@@ -2,17 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for
 
 import recommender
 
-app = Flask(__name__)
+app = Flask(__name__) #创建一个Flask应用对象
 
-
+#首页路由
 @app.route("/", methods=["GET"])
 def index():
-    songs_df = recommender.get_display_songs(max_per_genre=4)
+    songs_df = recommender.get_display_songs(max_per_genre=4) #每种风格选取最多4首歌曲展示
     songs = songs_df.to_dict(orient="records")
     error = request.args.get("error")
-    return render_template("index.html", songs=songs, error=error)
+    return render_template("index.html", songs=songs, error=error) #向模板传数据
 
-
+#推荐路由
 @app.route("/recommend", methods=["POST"])
 def recommend_route():
     selected_titles = request.form.getlist("favorite_titles")
