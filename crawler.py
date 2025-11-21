@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, parse_qs
 
-
+# 生成模拟爬虫结构，防止爬取失败时候备用
 def generate_sample_dataset(csv_path: Path | None = None) -> Path:
     """生成一个示例歌曲数据集，模拟爬虫的结果。
 
@@ -44,9 +44,10 @@ def generate_sample_dataset(csv_path: Path | None = None) -> Path:
     df.to_csv(csv_path, index=False, encoding="utf-8")
     return csv_path
 
-
+# 默认的开始地址，为了拿到全部的HTML
 START_URL = "https://music.163.com/discover/toplist?id=3778678"
 
+# 榜单白名单
 GENRE_CHARTS = {
     "网易云中文说唱榜": "中文说唱",
     "网易云全球说唱榜": "说唱",
@@ -69,7 +70,7 @@ GENRE_CHARTS = {
     "中文慢摇DJ榜": "DJ",
 }
 
-
+# 获取全部的榜单url
 def fetch_all_toplist_links():
     headers = {
         "User-Agent": "Mozilla/5.0",
@@ -111,7 +112,7 @@ def fetch_all_toplist_links():
     print(f"共发现 {len(result)} 个排行榜")
     return result
 
-
+# 筛选出有用的风格榜单
 def filter_genre_charts(charts):
     result = []
     for chart in charts:
@@ -125,7 +126,7 @@ def filter_genre_charts(charts):
     print(f"其中保留 {len(result)} 个风格榜单")
     return result
 
-
+# 通过筛选出来的榜单地址获取JSON，调用官方的API接口，返回{歌名、作者、风格}列表
 def fetch_songs_from_chart(chart_url, genre, session=None):
     if session is None:
         session = requests.Session()
@@ -169,7 +170,7 @@ def fetch_songs_from_chart(chart_url, genre, session=None):
 
     return songs
 
-
+# 将数据保存在CSV文件中
 def build_songs_csv(genre_charts, csv_path: Path | None = None) -> Path:
     if csv_path is None:
         csv_path = Path(__file__).parent / "data" / "songs.csv"
